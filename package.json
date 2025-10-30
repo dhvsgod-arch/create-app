@@ -1,6 +1,6 @@
 {
   "name": "@shark-pepper/create-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -10,6 +10,10 @@
   "bin": {
     "create-app": "bin/create-app-cli.js"
   },
+  "files": [
+    "bin",
+    "templates"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

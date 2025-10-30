@@ -31,6 +31,16 @@ function hasPnpm() {
 }
 const installCmd = hasPnpm() ? "pnpm install" : "npm install";
 
+// 获取模板路径（全局安装后可用）
+function getTemplatePath(templateName) {
+  const templatePath = path.resolve(__dirname, "../templates", templateName);
+  if (!fs.existsSync(templatePath)) {
+    console.error(symbols.error, chalk.red(`模板不存在: ${templatePath}`));
+    process.exit(1);
+  }
+  return templatePath;
+}
+
 // 异步复制模板
 async function copyTemplate(src, dest) {
   try {
@@ -194,7 +204,7 @@ async function run() {
     console.log(symbols.info, chalk.blue("📁 创建项目目录中..."));
 
     // 复制模板
-    const templatePath = path.join(__dirname, "../templates", template);
+    const templatePath = getTemplatePath(template);
     await copyTemplate(templatePath, projectPath);
 
     // 处理 package.base.json → package.json
@@ -216,7 +226,7 @@ async function run() {
     );
     execSync(installCmd, { cwd: projectPath, stdio: "inherit" });
 
-    // 固定启用 Husky + lint-staged
+    // Husky + lint-staged
     setupHusky(projectPath);
 
     // 可选 Jest
