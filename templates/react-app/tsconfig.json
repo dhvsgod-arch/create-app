@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    /* 基本目标与模块 */
+    "target": "ES2022",
+    "module": "ESNext",
+
+    /* JSX 支持（React 17+ / 18+ 新 JSX 转换）*/
+    "jsx": "react-jsx",
+
+    /* 路径与解析 */
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "moduleResolution": "node",
+
+    /* 语言与语法严格性 */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "alwaysStrict": true,
+
+    /* 兼容与互操作 */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* 输出与构建加速 */
+    "sourceMap": true,
+    "declaration": false,
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo",
+    "outDir": "./dist",
+
+    /* 兼容 JSON/JS 混合项目 */
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "isolatedModules": false,
+
+    /* 更严格/现代的选项（视团队需要） */
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "build", "scripts"]
+}
