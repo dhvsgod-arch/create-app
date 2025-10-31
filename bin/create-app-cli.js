@@ -46,9 +46,18 @@ async function copyTemplate(src, dest) {
   try {
     await fse.copy(src, dest, {
       overwrite: true,
-      filter: (srcPath) => !srcPath.includes("node_modules"),
+      filter: (srcPath) => {
+        const relPath = path.relative(src, srcPath);
+        if (!relPath) return true; // 根目录
+        // 忽略 node_modules 目录和某些隐藏文件
+        if (relPath.split(path.sep).includes("node_modules")) return false;
+        if (relPath.startsWith(".git")) return false;
+        if (relPath.startsWith(".DS_Store")) return false;
+
+        return true;
+      },
     });
-    console.log(symbols.success, chalk.green("✅ 模板文件复制完成"));
+    console.log(symbols.success, chalk.green("✅  模板文件复制完成"));
   } catch (err) {
     console.error(symbols.error, chalk.red("模板复制失败"), err);
     process.exit(1);
@@ -76,7 +85,7 @@ function setupHusky(projectPath) {
       );
     }
 
-    console.log(symbols.success, chalk.green("✅ Husky + lint-staged 已配置"));
+    console.log(symbols.success, chalk.green("✅  Husky + lint-staged 已配置"));
   } catch (err) {
     console.error(symbols.error, chalk.red("Husky 配置失败"), err);
   }
@@ -147,7 +156,7 @@ module.exports = {
     const fileMock = `module.exports = 'test-file-stub';\n`;
     fs.writeFileSync(path.join(mocksDir, "fileMock.js"), fileMock, "utf-8");
 
-    console.log(symbols.success, chalk.green("✅ Jest 配置完成"));
+    console.log(symbols.success, chalk.green("✅  Jest 配置完成"));
   } catch (err) {
     console.error(symbols.error, chalk.red("Jest 配置失败"), err);
   }
@@ -201,7 +210,7 @@ async function run() {
     }
 
     fs.mkdirSync(projectPath);
-    console.log(symbols.info, chalk.blue("📁 创建项目目录中..."));
+    console.log(symbols.info, chalk.blue("📁  创建项目目录中..."));
 
     // 复制模板
     const templatePath = getTemplatePath(template);
@@ -217,12 +226,12 @@ async function run() {
       pkgData.description = description;
       fs.writeFileSync(pkgPath, JSON.stringify(pkgData, null, 2), "utf-8");
       fs.unlinkSync(basePkgPath);
-      console.log(symbols.success, chalk.green("✅ 已生成 package.json"));
+      console.log(symbols.success, chalk.green("✅  已生成 package.json"));
     }
 
     // 安装依赖
     console.log(
-      chalk.yellow(`📦 正在使用 ${installCmd.split(" ")[0]} 安装依赖...`)
+      chalk.yellow(`📦  正在使用 ${installCmd.split(" ")[0]} 安装依赖...`)
     );
     execSync(installCmd, { cwd: projectPath, stdio: "inherit" });
 
@@ -236,7 +245,7 @@ async function run() {
       symbols.success,
       chalk.green(`🎉 项目 ${projectName} 创建成功！`)
     );
-    console.log(chalk.cyan(`👉 运行项目:`));
+    console.log(chalk.cyan(`👉  运行项目:`));
     console.log(chalk.white(`   cd ${projectName}`));
     console.log(chalk.white(`   npm start`));
   } catch (err) {
