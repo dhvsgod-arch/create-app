@@ -1,0 +1,16 @@
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 100vh;
+  @include flex-center(column);
+  .welcome {
+    width: 750px;
+    margin-bottom: 40px;
+    @include flex-center(column);
+  }
+}
