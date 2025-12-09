@@ -1,28 +1,27 @@
 # 🦈 @shark-pepper/create-app
 
-> 🚀 一键创建现代化前端项目的脚手架工具。  
-> 支持 React + TypeScript + Webpack + ESLint + Prettier + Jest 等主流配置。
+> 🚀 A scaffolding tool for creating modern front-end projects.
+> It supports mainstream configurations such as React, TypeScript, Webpack, ESLint, Prettier, and Jest.
 
 ---
 
-## ✨ 特性
+## ✨ Characteristic
 
-- 🧱 内置多种模板（React、Vue）
-- ⚙️ 默认集成 ESLint、Prettier、Husky、Commitlint 等规范工具
-- 🧪 支持 Jest 单元测试
+- ⚙️ By default, it integrates specification tools such as ESLint, Prettier, Husky, and Commitlint.
+- 🧪 Supports Jest unit testing
 
 ---
 
-## 📦 快速开始
+## 📦 Quick Start
 
-### 使用 npx（推荐）
+### Use npx (recommended)
 
 ```bash
 npx @shark-pepper/create-app my-project
 
 ```
 
-### 或全局安装
+### Or install globally
 
 ```bash
 npm install -g @shark-pepper/create-app

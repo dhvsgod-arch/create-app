@@ -35,7 +35,10 @@ const installCmd = hasPnpm() ? "pnpm install" : "npm install";
 function getTemplatePath(templateName) {
   const templatePath = path.resolve(__dirname, "../templates", templateName);
   if (!fs.existsSync(templatePath)) {
-    console.error(symbols.error, chalk.red(`模板不存在: ${templatePath}`));
+    console.error(
+      symbols.error,
+      chalk.red(`Template does not exist: ${templatePath}`)
+    );
     process.exit(1);
   }
   return templatePath;
@@ -57,16 +60,19 @@ async function copyTemplate(src, dest) {
         return true;
       },
     });
-    console.log(symbols.success, chalk.green("✅  模板文件复制完成"));
+    console.log(
+      symbols.success,
+      chalk.green("✅  Template file copy completed")
+    );
   } catch (err) {
-    console.error(symbols.error, chalk.red("模板复制失败"), err);
+    console.error(symbols.error, chalk.red("Template copy failed"), err);
     process.exit(1);
   }
 }
 
 // Husky + lint-staged 配置
 function setupHusky(projectPath) {
-  console.log(chalk.blue("⚙️  配置 Husky + lint-staged ..."));
+  console.log(chalk.blue("⚙️  Configure Husky + lint-staged ..."));
 
   try {
     // 执行 husky install
@@ -85,15 +91,18 @@ function setupHusky(projectPath) {
       );
     }
 
-    console.log(symbols.success, chalk.green("✅  Husky + lint-staged 已配置"));
+    console.log(
+      symbols.success,
+      chalk.green("✅  Husky + lint-staged is configured.")
+    );
   } catch (err) {
-    console.error(symbols.error, chalk.red("Husky 配置失败"), err);
+    console.error(symbols.error, chalk.red("Husky configuration failed."), err);
   }
 }
 
 // Jest 配置
 function setupJest(projectPath) {
-  console.log(chalk.blue("⚙️  配置 Jest 测试环境..."));
+  console.log(chalk.blue("⚙️  Configuring the Jest testing environment..."));
 
   try {
     // 安装依赖
@@ -156,9 +165,12 @@ module.exports = {
     const fileMock = `module.exports = 'test-file-stub';\n`;
     fs.writeFileSync(path.join(mocksDir, "fileMock.js"), fileMock, "utf-8");
 
-    console.log(symbols.success, chalk.green("✅  Jest 配置完成"));
+    console.log(
+      symbols.success,
+      chalk.green("✅  Jest configuration complete")
+    );
   } catch (err) {
-    console.error(symbols.error, chalk.red("Jest 配置失败"), err);
+    console.error(symbols.error, chalk.red("Jest configuration failed."), err);
   }
 }
 
@@ -170,32 +182,32 @@ async function run() {
       {
         type: "input",
         name: "projectName",
-        message: "请输入项目名称：",
+        message: "Project Name: ",
         default: "my-app",
         when: () => !projectNameArg,
       },
       {
         type: "input",
         name: "version",
-        message: "请输入项目版本号：",
+        message: "Version: ",
         default: "1.0.0",
       },
       {
         type: "input",
         name: "description",
-        message: "请输入项目描述：",
-        default: "A project created by create-app-cli",
+        message: "Description: ",
+        default: "A project created by @shark-pepper/create-app",
       },
       {
         type: "list",
         name: "template",
-        message: "请选择项目模板：",
-        choices: ["react-app", "vue-app"],
+        message: "Select a project template: ",
+        choices: ["react-app"],
       },
       {
         type: "confirm",
         name: "useJest",
-        message: "是否生成基于 Jest 的单元测试配置？",
+        message: "Need to generate a Jest-based unit test configuration",
         default: true,
       },
     ]);
@@ -205,12 +217,15 @@ async function run() {
 
     const projectPath = path.join(process.cwd(), projectName);
     if (fs.existsSync(projectPath)) {
-      console.log(symbols.error, chalk.red(`目录 ${projectName} 已存在！`));
+      console.log(
+        symbols.error,
+        chalk.red(`The directory ${projectName} already exists!`)
+      );
       process.exit(1);
     }
 
     fs.mkdirSync(projectPath);
-    console.log(symbols.info, chalk.blue("📁  创建项目目录中..."));
+    console.log(symbols.info, chalk.blue("📁  Create a project directory..."));
 
     // 复制模板
     const templatePath = getTemplatePath(template);
@@ -226,12 +241,19 @@ async function run() {
       pkgData.description = description;
       fs.writeFileSync(pkgPath, JSON.stringify(pkgData, null, 2), "utf-8");
       fs.unlinkSync(basePkgPath);
-      console.log(symbols.success, chalk.green("✅  已生成 package.json"));
+      console.log(
+        symbols.success,
+        chalk.green("✅  package.json has been generated")
+      );
     }
 
     // 安装依赖
     console.log(
-      chalk.yellow(`📦  正在使用 ${installCmd.split(" ")[0]} 安装依赖...`)
+      chalk.yellow(
+        `📦  Dependencies are being installed using ${
+          installCmd.split(" ")[0]
+        }...`
+      )
     );
     execSync(installCmd, { cwd: projectPath, stdio: "inherit" });
 
@@ -243,13 +265,13 @@ async function run() {
 
     console.log(
       symbols.success,
-      chalk.green(`🎉 项目 ${projectName} 创建成功！`)
+      chalk.green(`🎉 Project ${projectName} created successfully!`)
     );
-    console.log(chalk.cyan(`👉  运行项目:`));
+    console.log(chalk.cyan(`👉  Run the project:`));
     console.log(chalk.white(`   cd ${projectName}`));
     console.log(chalk.white(`   npm start`));
   } catch (err) {
-    console.error(symbols.error, chalk.red("创建项目失败！"), err);
+    console.error(symbols.error, chalk.red("Project creation failed!"), err);
   }
 }
 
