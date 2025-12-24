@@ -12,7 +12,6 @@ import chalk from "chalk";
 import symbols from "log-symbols";
 import fse from "fs-extra";
 
-// __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -54,7 +53,8 @@ async function copyTemplate(src, dest) {
         if (!relPath) return true; // 根目录
         // 忽略 node_modules 目录和某些隐藏文件
         if (relPath.split(path.sep).includes("node_modules")) return false;
-        if (relPath.startsWith(".git")) return false;
+        if (relPath.startsWith(".git") && relPath !== ".gitignore")
+          return false;
         if (relPath.startsWith(".DS_Store")) return false;
 
         return true;
@@ -67,36 +67,6 @@ async function copyTemplate(src, dest) {
   } catch (err) {
     console.error(symbols.error, chalk.red("Template copy failed"), err);
     process.exit(1);
-  }
-}
-
-// Husky + lint-staged 配置
-function setupHusky(projectPath) {
-  console.log(chalk.blue("⚙️  Configure Husky + lint-staged ..."));
-
-  try {
-    // 执行 husky install
-    execSync("npx husky install", { cwd: projectPath, stdio: "inherit" });
-
-    // 创建 pre-commit 钩子
-    const huskyDir = path.join(projectPath, ".husky");
-    if (!fs.existsSync(huskyDir)) fs.mkdirSync(huskyDir, { recursive: true });
-
-    const preCommitFile = path.join(huskyDir, "pre-commit");
-    if (!fs.existsSync(preCommitFile)) {
-      fs.writeFileSync(
-        preCommitFile,
-        '#!/bin/sh\n. "$(dirname "$0")/_/husky.sh"\nnpx lint-staged\n',
-        { mode: 0o755 }
-      );
-    }
-
-    console.log(
-      symbols.success,
-      chalk.green("✅  Husky + lint-staged is configured.")
-    );
-  } catch (err) {
-    console.error(symbols.error, chalk.red("Husky configuration failed."), err);
   }
 }
 
@@ -247,6 +217,8 @@ async function run() {
       );
     }
 
+    execSync("git init", { cwd: projectPath, stdio: "inherit" });
+
     // 安装依赖
     console.log(
       chalk.yellow(
@@ -256,9 +228,6 @@ async function run() {
       )
     );
     execSync(installCmd, { cwd: projectPath, stdio: "inherit" });
-
-    // Husky + lint-staged
-    setupHusky(projectPath);
 
     // 可选 Jest
     if (useJest) setupJest(projectPath);

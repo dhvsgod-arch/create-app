@@ -3,7 +3,6 @@ import { merge } from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import ESLintPlugin from 'eslint-webpack-plugin';
 import common from './webpack.common.js';
 
 const __dirname = path.resolve();
@@ -77,7 +76,6 @@ export default merge(common, {
         configFile: path.resolve(__dirname, './tsconfig.json'),
       },
     }),
-    new ESLintPlugin({ extensions: ['ts', 'tsx', 'js', 'jsx'], fix: true, emitWarning: false }),
   ].filter(Boolean),
 
   devtool: 'source-map',
